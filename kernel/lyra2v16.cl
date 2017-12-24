@@ -109,7 +109,7 @@ void reduceDuplexf_tmp(ulong4* state, __global ulong4* DMatrix,__local ulong4* t
 
 	ulong4 state1[3];
 	uint ps1 = 0;
-	uint ps2 = (memshift * 15 + memshift * 8);
+	uint ps2 = (memshift * 15 + memshift * 16);
 	//#pragma unroll 8
 	for (int i = 0; i < 16; i++)
 	{

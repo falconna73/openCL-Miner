@@ -87,7 +87,7 @@ void reduceDuplexf(ulong4* state ,__global ulong4* DMatrix)
 	 uint ps1 = 0;
 	 uint ps2 = (memshift * 15 + memshift * 16);
 //#pragma unroll 8
-	 for (int i = 0; i < 18; i++)
+	 for (int i = 0; i < 16; i++)
 	 {
 		 uint s1 = ps1 + i*memshift;
 		 uint s2 = ps2 - i*memshift;

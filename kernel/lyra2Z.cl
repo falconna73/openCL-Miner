@@ -116,7 +116,7 @@ __kernel void search(
 
     unsigned int h[8];
 	unsigned int m[16];
-	unsigned int v[24];
+	unsigned int v[16];
 
 
 h[0]=h0;

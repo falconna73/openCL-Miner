@@ -181,9 +181,9 @@ void reduceDuplexRowf_tmp(uint rowIn, uint rowInOut, uint rowOut, ulong4 * state
 {
 
 	ulong4 state1[3], state2[3];
-	uint ps1 = (memshift * 8 * rowIn);
-	uint ps2 = (memshift * 8 * rowInOut);
-	uint ps3 = (memshift * 8 * rowOut);
+	uint ps1 = (memshift * 16 * rowIn);
+	uint ps2 = (memshift * 16 * rowInOut);
+	uint ps3 = (memshift * 16 * rowOut);
 
 	//#pragma unroll 8
 	for (int i = 0; i < 16; i++)

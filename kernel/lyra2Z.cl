@@ -181,7 +181,7 @@ __kernel void search1(__global uchar* hashes,__global uchar* matrix, __global ui
 
 //  uint offset = (4 * memshift * 4 * 4 * sizeof(ulong)* (get_global_id(0) % MAX_GLOBAL_THREADS))/32;
   ulong4 state[4];
-  __local ulong4 temp[24*WORKSIZE];
+  __local ulong4 temp[48*WORKSIZE];
   
   state[0].x = hash->h8[0]; //password
   state[0].y = hash->h8[1]; //password
@@ -208,27 +208,27 @@ __kernel void search1(__global uchar* hashes,__global uchar* matrix, __global ui
 		  (DMatrix)[j+s1] = state[j];
 
 	  for (int j = 0; j < 3; j++)
-		  temp[3*(15-i)+j+24* get_local_id(0)] = state[j];
+		  temp[3*(15-i)+j+48* get_local_id(0)] = state[j];
 
 	  round_lyra(state);
   }
  ///// reduceduplexrow1 ////////////
-  reduceDuplexf_tmp(state,DMatrix,temp + 24 * get_local_id(0));
+  reduceDuplexf_tmp(state,DMatrix,temp + 48 * get_local_id(0));
  
-  reduceDuplexRowSetupf_pass1(1, 0, 2,state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(2, 1, 3, state,DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass1(3, 0, 4, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(4, 3, 5, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass1(5, 2, 6, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(6, 1, 7, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass1(7, 0, 8,state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(8, 1, 9, state,DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass1(9, 0, 10, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(10, 3, 11, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass1(11, 2, 12, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(12, 1, 13, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(13, 0, 14, state, DMatrix, temp + 24 * get_local_id(0));
-  reduceDuplexRowSetupf_pass2(14, 1, 15, state, DMatrix, temp + 24 * get_local_id(0));
+  reduceDuplexRowSetupf_pass1(1, 0, 2,state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(2, 1, 3, state,DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass1(3, 0, 4, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(4, 3, 5, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass1(5, 2, 6, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(6, 1, 7, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass1(7, 0, 8,state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(8, 1, 9, state,DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass1(9, 0, 10, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(10, 3, 11, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass1(11, 2, 12, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(12, 1, 13, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(13, 0, 14, state, DMatrix, temp + 48 * get_local_id(0));
+  reduceDuplexRowSetupf_pass2(14, 1, 15, state, DMatrix, temp + 48 * get_local_id(0));
 
 
   uint rowa;
@@ -239,7 +239,7 @@ for (uint j = 0; j < 4; j++) {
 
   for (uint i = 0; i<16; i++) {
 	  rowa = state[0].x & 15;
-	  reduceDuplexRowf_tmp(prev, rowa, iterator, state, DMatrix, temp + 24 * get_local_id(0));
+	  reduceDuplexRowf_tmp(prev, rowa, iterator, state, DMatrix, temp + 48 * get_local_id(0));
 	  prev = iterator;
 	  iterator = (iterator + 3) & 15;
   }
@@ -247,9 +247,9 @@ for (uint j = 0; j < 4; j++) {
   for (uint i = 0; i<16; i++) {
 	  rowa = state[0].x & 15;
 if (i==7 && j==3)
-	  reduceDuplexRowf_tmp2(prev, rowa, iterator, state, DMatrix, temp + 24 * get_local_id(0));
+	  reduceDuplexRowf_tmp2(prev, rowa, iterator, state, DMatrix, temp + 48 * get_local_id(0));
 else
-	  reduceDuplexRowf_tmp(prev, rowa, iterator, state, DMatrix, temp + 24 * get_local_id(0));
+	  reduceDuplexRowf_tmp(prev, rowa, iterator, state, DMatrix, temp + 48 * get_local_id(0));
 	  prev = iterator;
 	  iterator = (iterator - 1) & 15;
   }
@@ -258,7 +258,7 @@ else
   uint shift = (memshift * 16 * rowa);
 
   for (int j = 0; j < 3; j++)
-	  state[j] ^= temp[j + 24 * get_local_id(0)]; //(DMatrix)[j+shift];
+	  state[j] ^= temp[j + 48 * get_local_id(0)]; //(DMatrix)[j+shift];
 
 //  for (int j = 0; j < 3; j++)
 //	  state[j] ^= temp[j];
